@@ -44,3 +44,6 @@ Someone implements the data structure and then the other 2 research 2 of the alg
     - Pick at random
     - Their friends also have a bad moral value?
     
+- Git commands
+    - push to a new branch
+        - git push remoteName localBranchName:remoteNewBranchName
