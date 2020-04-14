@@ -55,6 +55,10 @@ class Student:
     def potentiallyRequest(self, report=False):
         if report:
             print('Student ' + str(self.id) + ' requested homework.')
+            
+    def potentiallyReceive(self, report=False):
+        if report:
+            print('Student ' + str(self.id) + ' received homework.')
 
 class Class:
     def __init__(self, student_count, dueDate):
