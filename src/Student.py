@@ -33,7 +33,6 @@ class Student:
         # work
         if (today >= self.startDay and not self.finished):
             self.progress += self.workPerDay
-        self.potentiallyCheat(report)
         
         # check if student is done
         if (abs(self.progress - 1) < .00001):
@@ -41,13 +40,12 @@ class Student:
             self.finished = True
         
         # cheat if need be
-        self.potentiallyCheat()
+        self.potentiallyCheat(today, report)
 
-
-    def potentiallyCheat(self, report=False):
-        if self.progress < 1 and self.cheat_level <= 3 and self.today >= self.startDay:
+    def potentiallyCheat(self, today, report=False):
+        if self.progress < 1 and self.cheat_level <= 3 and today >= self.startDay:
             self.potentiallyRequest(report)
-        if self.cheat_level <= 3 and self.today >= self.startDay:
+        if self.cheat_level <= 3 and today >= self.startDay:
             self.potentiallySend(report)
             
     def potentiallySend(self, report=False):
