@@ -26,21 +26,31 @@ class Student:
 
         self.friends = [] # TODO LATER
 
-    def useDay(self):
+    def useDay(self, report=False):
         if self.today >= self.dueDate:
             raise Exception("The student can't do anything on (or past) the due date, since it is considered to be due at 12:01 AM on the due date.")
         if (self.today >= self.startDay):
             self.progress += self.workPerDay
-        self.potentiallyCheat()
+        self.potentiallyCheat(report)
         
         if (self.today == self.finishDay):
             self.finished = True
 
         self.today += 1
 
-    def potentiallyCheat(self):
-        pass
-
+    def potentiallyCheat(self, report=False):
+        if self.progress < 1 and self.cheat_level <= 3 and self.today >= self.startDay:
+            self.potentiallyRequest(report)
+        if self.cheat_level <= 3 and self.today >= self.startDay:
+            self.potentiallySend(report)
+            
+    def potentiallySend(self, report=False):
+        if report:
+            print('Student ' + str(self.id) + ' sent their homework.')
+    
+    def potentiallyRequest(self, report=False):
+        if report:
+            print('Student ' + str(self.id) + ' requested homework.')
 
 class Class:
     def __init__(self, student_count, dueDate):
@@ -54,15 +64,17 @@ class Class:
             self.students.append(Student(i, cheat, procrastinate, dueDate))
 
     def useDay(self, report=False):
+        if report:
+            print('During day: ' + str(self.today))
         for student in self.students:
-            student.useDay()
+            student.useDay(report)
         if report:
             self.report()
         self.today += 1
 
     
     def report(self):
-        print("At the end of day: " + str(self.today))
+        print("\nAt the end of day: " + str(self.today))
         for student in self.students:
             if student.finished:
                 print(f'Student {student.id} has finished')
