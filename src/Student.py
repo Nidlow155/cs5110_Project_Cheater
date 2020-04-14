@@ -26,6 +26,30 @@ class Student:
         self.workPerDay = 1 / (self.finishDay - self.startDay + 1)  # get the work done evenly during each day bewteen due date and finish date
 
         self.friends = [] # TODO LATER
+        
+    def getId(self):
+        return self.id
+    
+    def getCheatLevel(self):
+        return self.cheat_level
+    
+    def getProcLevel(self):
+        return self.procrastinate_level
+    
+    def getProgress(self):
+        return self.progress
+    
+    def getStartDay(self):
+        return self.startDay
+    
+    def getFinishDay(self):
+        return self.finishDay
+    
+    def getWorkPerDay(self):
+        return self.workPerDay
+    
+    def getFriends(self):
+        return self.friends
 
     def useDay(self, today, report=False):
         if today >= self.dueDate:
@@ -49,16 +73,24 @@ class Student:
             self.potentiallySend(report)
             
     def potentiallySend(self, report=False):
-        if report:
-            print('Student ' + str(self.id) + ' sent their homework.')
+        for friend in friends:
+            # friend.potentiallyReceive(report) # TODO add this method in once friends are implemented
+            if report:
+                print('Student ' + str(self.id) + ' sent their homework to ' + str(friend.getId()))
     
     def potentiallyRequest(self, report=False):
-        if report:
-            print('Student ' + str(self.id) + ' requested homework.')
+        if self.cheat_level <= 3: # TODO introduce the idea that students may not finish in time and that's why they would "request help" (cheat)
+            for friend in friends:
+                # friend.potentiallySend() # TODO determine if they only ask from certain friends
+                if report:
+                    print('Student ' + str(self.id) + ' requested homework from ' + str(friend.getId()))
             
-    def potentiallyReceive(self, report=False):
-        if report:
-            print('Student ' + str(self.id) + ' received homework.')
+    def potentiallyReceive(self, friendId, report=False):
+        if self.cheat_level <= 3 and self.progress < 1: # TODO determine metrics for why a student would accept homework
+            # TODO algorithm for if they receive how much does their progress increase
+            # TODO do they receive based on any of their friend's metrics?
+            if report:
+                print('Student ' + str(self.id) + ' received homework from ' + str(friendId))
 
 class Class:
     def __init__(self, student_count, dueDate):
