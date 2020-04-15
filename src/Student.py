@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, shuffle
 from common import *
 
 class Student:
@@ -23,6 +23,9 @@ class Student:
         self.finishDay = randint(self.startDay, lastDay)  # finish randomly between the day they start and the day before due
         self.workPerDay = 1 / (self.finishDay - self.startDay + 1)  # get the work done evenly during each day bewteen due date and finish date
 
+        # friends parameters
+        self.personality = randint(0, NUM_PERSONALITIES)
+        self.numFriends = randint(.1 * NUM_STUDENTS, .7 * NUM_STUDENTS)
         self.friends = [] # TODO LATER
 
     def getId(self):
@@ -71,14 +74,14 @@ class Student:
             self.potentiallySend(report)
             
     def potentiallySend(self, report=False):
-        for friend in friends:
+        for friend in self.friends:
             # friend.potentiallyReceive(report) # TODO add this method in once friends are implemented
             if report:
                 print('Student ' + str(self.id) + ' sent their homework to ' + str(friend.getId()))
     
     def potentiallyRequest(self, report=False):
         if self.cheat_level <= 3: # TODO introduce the idea that students may not finish in time and that's why they would "request help" (cheat)
-            for friend in friends:
+            for friend in self.friends:
                 # friend.potentiallySend() # TODO determine if they only ask from certain friends
                 if report:
                     print('Student ' + str(self.id) + ' requested homework from ' + str(friend.getId()))
@@ -90,7 +93,43 @@ class Student:
             if report:
                 print('Student ' + str(self.id) + ' received homework from ' + str(friendId))
 
+    def makeFriends(self, students):
+        # validation
+        if len(self.friends) >= self.numFriends:
+            raise Exception("Shouldn't be calling Student::makeFriends() when the student already has all their friends")
+
+        # functionality
+        if len(self.friends) == 0:
+            candidates = students.copy()
+        else:
+            candidates = self.getFriendsOfFriends()
+            print(f'len(candidates) = {len(candidates)}')
+        shuffle(candidates)
+        self.friends.append(candidates[0])
+        if len(self.friends) == self.numFriends:
+            return 1
+        else:
+            return 0
+
+    def needsFriends(self):
+        if len(self.friends) < self.numFriends:
+            return True
+        else:
+            return False
 
 
+    def getFriendsOfFriends(self):
+        secondDegreeFriends = []
+        for myFriend in self.friends:
+            for theirFriend in myFriend.friends:
+                if theirFriend not in secondDegreeFriends:
+                    secondDegreeFriends.append(theirFriend)
+        return secondDegreeFriends
 
+
+    def printFriendList(self):
+        print(f'Student {self.id} has {len(self.friends)} friends, with max friends of {self.numFriends}. Friends\'s ids are: ', end="")
+        for friend in self.friends:
+            print(str(friend.getId()) + ', ', end='')
+        print()
 

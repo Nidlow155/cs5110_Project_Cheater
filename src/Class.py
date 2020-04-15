@@ -15,8 +15,19 @@ class Class:
             self.students.append(Student(i, cheat, procrastinate, dueDate))
 
         # set the friends
-        # inherent probability - function of comparable moral levels, random assignment (quantity determined by friendliness)
-
+        studentsWithAllFriends = 0
+        maxIterations = 10000
+        counter = 0
+        while (studentsWithAllFriends != NUM_STUDENTS or counter == maxIterations):
+            for student in self.students:
+                if student.needsFriends():
+                    studentsWithAllFriends += student.makeFriends(self.students)
+            counter += 1
+        if counter == maxIterations:
+            print("Maxed Out")
+        else:
+            for student in self.students:
+                student.printFriendList()
 
     def useDay(self, report=False):
         if report:
