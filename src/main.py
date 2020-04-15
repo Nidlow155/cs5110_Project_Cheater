@@ -1,8 +1,7 @@
-from Student import Student, Class
-from random import randint
+from Student import Student
+from Class import Class
+from configuration import *
 
-NUM_STUDENTS = 5
-NUM_DAYS = 10
 
 myClass = Class(NUM_STUDENTS, NUM_DAYS)
 
