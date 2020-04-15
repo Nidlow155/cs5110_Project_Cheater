@@ -7,12 +7,12 @@ from visual import Visual
 myClass = Class(NUM_STUDENTS, NUM_DAYS)
 
 # run the simulation
-for i in range(NUM_DAYS):
-    myClass.useDay(report=False)
-
 v = Visual(myClass.students)
 v.showClass()
-# how to update class
-# v.setClass(myClass.students)
-# v.showClass()
+for i in range(NUM_DAYS):
+    myClass.useDay(report=False)
+    v.updateClass(myClass.students)
+    # for simulation purposes
+    myClass.students[i].cheater=True
+
 v.dontClose()
