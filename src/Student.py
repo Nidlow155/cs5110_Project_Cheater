@@ -13,6 +13,7 @@ class Student:
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
         self.progress = 0  # a number between 0 and 1 that shows the fraction of the total work already completed
         self.finished = False
+        self.cheater = False
 
         lastDay = dueDate - 1
         error = self.dueDate // 10  # error level of 10% of the total work time
@@ -24,11 +25,12 @@ class Student:
         self.finishDay = randint(self.startDay, lastDay)  # finish randomly between the day they start and the day before due
         self.workPerDay = 1 / (self.finishDay - self.startDay + 1)  # get the work done evenly during each day bewteen due date and finish date
 
+        
         # friends parameters
         self.personality = randint(0, NUM_PERSONALITIES)
         self.preferredNumFriends = randint(MIN_FRIENDS, MAX_FRIENDS)
         self.friends = []
-
+        
     def getId(self):
         return self.id
     
