@@ -1,5 +1,5 @@
 from Student import Student
-from common import *
+from configuration import *
 from random import randint
 
 class Class:
@@ -15,15 +15,18 @@ class Class:
             self.students.append(Student(i, cheat, procrastinate, dueDate))
 
         # set the friends
-        studentsWithAllFriends = 0
-        maxIterations = 10000
+        needsFriends = [True] * NUM_STUDENTS
         counter = 0
-        while (studentsWithAllFriends != NUM_STUDENTS or counter == maxIterations):
-            for student in self.students:
-                if student.needsFriends():
-                    studentsWithAllFriends += student.makeFriends(self.students)
+        while (True in needsFriends):
+            print(f'\n========\nROUND {counter}\n========\n')
+            for i in range(len(self.students)):
+                if self.students[i].needsFriends():
+                    self.students[i].makeFriends(self.students)
+                needsFriends[i] = self.students[i].needsFriends()
             counter += 1
-        if counter == maxIterations:
+            if counter == MAX_ITERATIONS:
+                break
+        if counter == MAX_ITERATIONS:
             print("Maxed Out")
         else:
             for student in self.students:

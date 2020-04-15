@@ -1,5 +1,6 @@
 from random import randint, shuffle
-from common import *
+from numpy import argsort
+from configuration import *
 
 class Student:
     def __init__(self, id, cheat_level, procrastinate_level, dueDate):
@@ -25,8 +26,8 @@ class Student:
 
         # friends parameters
         self.personality = randint(0, NUM_PERSONALITIES)
-        self.numFriends = randint(.1 * NUM_STUDENTS, .7 * NUM_STUDENTS)
-        self.friends = [] # TODO LATER
+        self.preferredNumFriends = randint(MIN_FRIENDS, MAX_FRIENDS)
+        self.friends = []
 
     def getId(self):
         return self.id
@@ -94,25 +95,60 @@ class Student:
                 print('Student ' + str(self.id) + ' received homework from ' + str(friendId))
 
     def makeFriends(self, students):
+        print(f'ID is {self.id}, preferredNumFriends is {self.preferredNumFriends}')
         # validation
-        if len(self.friends) >= self.numFriends:
+        if len(self.friends) >= self.preferredNumFriends:
             raise Exception("Shouldn't be calling Student::makeFriends() when the student already has all their friends")
 
-        # functionality
-        if len(self.friends) == 0:
-            candidates = students.copy()
-        else:
-            candidates = self.getFriendsOfFriends()
-            print(f'len(candidates) = {len(candidates)}')
-        shuffle(candidates)
-        self.friends.append(candidates[0])
-        if len(self.friends) == self.numFriends:
-            return 1
-        else:
-            return 0
+        # get all the candidates
+        allCandidates = []
+        for student in students:
+            if self.isCandidate(student):
+                allCandidates.append(student)
+        shuffle(allCandidates)
+
+        # get preferred candidates
+        likelyCandidates = self.getFriendsOfFriends()
+        if len(likelyCandidates) < MIN_CANDIDATES:
+            print(f'(supplementing existing {len(likelyCandidates)} candidates with new candidates with ids ', end='')
+            for candidate in allCandidates:
+                if candidate not in likelyCandidates:
+                    likelyCandidates.append(candidate)
+            print(')')
+
+        # select a candidate
+        print(f'Candidate ids are: ', end='')
+        for candidate in likelyCandidates:
+            print(candidate.id, ', ', end='')
+        print()
+        print(f'Friends before are: ', end='')
+        for friend in self.friends:
+            print(friend.getId(), ", ", end='')
+        newFriend = self.selectCandidate(likelyCandidates)
+        self.friends.append(newFriend)
+        newFriend.addFriend(students[self.id])
+        print(f'\nAdded friend {likelyCandidates[0].id}')
+        print('*****')
+
+
+    def selectCandidate(self, candidates):
+        scores = [0] * len(candidates)
+        for i in range(len(candidates)):
+            if candidates[i].personality == self.personality:
+                scores[i] += 1
+            if abs(candidates[i].cheat_level - self.cheat_level) <= CHEAT_TOLERANCE:
+                scores[i] += 1
+            if abs(candidates[i].procrastinate_level - self.procrastinate_level) <= PROCRASTINATE_TOLERANCE:
+                scores[i] += 1
+        indexOfSelection = argsort(scores)[-1]
+        return candidates[indexOfSelection]
+
+
+    def addFriend(self, student):
+        self.friends.append(student)
 
     def needsFriends(self):
-        if len(self.friends) < self.numFriends:
+        if len(self.friends) < self.preferredNumFriends:
             return True
         else:
             return False
@@ -122,14 +158,22 @@ class Student:
         secondDegreeFriends = []
         for myFriend in self.friends:
             for theirFriend in myFriend.friends:
-                if theirFriend not in secondDegreeFriends:
+                if (theirFriend not in secondDegreeFriends) and self.isCandidate(theirFriend):
                     secondDegreeFriends.append(theirFriend)
         return secondDegreeFriends
 
 
+    def isCandidate(self, student):
+        return (student.getId() != self.id) and (student not in self.friends)
+
+
     def printFriendList(self):
-        print(f'Student {self.id} has {len(self.friends)} friends, with max friends of {self.numFriends}. Friends\'s ids are: ', end="")
+        print(f'Student {self.id} has {len(self.friends)} friends, with max preferred friends of {self.preferredNumFriends}. Friends\'s ids are: ', end="")
+        ids = []
         for friend in self.friends:
-            print(str(friend.getId()) + ', ', end='')
+            ids.append(friend.getId())
+        ids.sort()
+        for id in ids:
+            print(str(id) + ', ', end='')
         print()
 
