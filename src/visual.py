@@ -21,14 +21,18 @@ class Visual:
     ##################
     # public functions #
     def showClass(self):
-        self.t.clear()
+        # self.t.clear()
         self._drawAllStudents()
         self._drawAllFriendships()
         # turtle.done()
 
+    def updateClass(self, students):
+        self.setClass(students)
+        self._drawAllStudents()
+
     def setClass(self, students):
         self.students = students
-        self._calculateStudentPositions()
+        self._calculateStudentCoords()
 
     def clearScreen(self):
         self.t.clear()
@@ -38,7 +42,7 @@ class Visual:
 
     #####################
     # private functions #
-    def _calculateStudentPositions(self):
+    def _calculateStudentCoords(self):
         self.sCoords = []
         n = len(self.students)
         r = n * 10
