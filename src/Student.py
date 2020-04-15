@@ -14,6 +14,7 @@ class Student:
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
         self.progress = 0  # a number between 0 and 1 that shows the fraction of the total work already completed
         self.finished = False
+        self.cheater = False
 
         lastDay = dueDate - 1
         error = self.dueDate // 10  # error level of 10% of the total work time
@@ -25,7 +26,7 @@ class Student:
         self.finishDay = randint(self.startDay, lastDay)  # finish randomly between the day they start and the day before due
         self.workPerDay = 1 / (self.finishDay - self.startDay + 1)  # get the work done evenly during each day bewteen due date and finish date
 
-        self.friends = [] # TODO LATER
+        self.friends = [i for i in range(5)] # TODO LATER
         
     def getId(self):
         return self.id
@@ -73,14 +74,14 @@ class Student:
             self.potentiallySend(report)
             
     def potentiallySend(self, report=False):
-        for friend in friends:
+        for friend in self.friends:
             # friend.potentiallyReceive(report) # TODO add this method in once friends are implemented
             if report:
                 print('Student ' + str(self.id) + ' sent their homework to ' + str(friend.getId()))
     
     def potentiallyRequest(self, report=False):
         if self.cheat_level <= 3: # TODO introduce the idea that students may not finish in time and that's why they would "request help" (cheat)
-            for friend in friends:
+            for friend in self.friends:
                 # friend.potentiallySend() # TODO determine if they only ask from certain friends
                 if report:
                     print('Student ' + str(self.id) + ' requested homework from ' + str(friend.getId()))
@@ -121,7 +122,3 @@ class Class:
             else:
                 print(f'Student {student.id} has progress {student.progress}')
         print()
-                
-
-
-
