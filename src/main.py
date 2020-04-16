@@ -10,9 +10,6 @@ myClass = Class(NUM_STUDENTS, NUM_DAYS)
 v = Visual(myClass.students)
 v.showClass()
 for i in range(NUM_DAYS):
-    myClass.useDay(report=False)
+    myClass.useDay(report=True)
     v.updateClass(myClass.students)
-    # for simulation purposes
-    myClass.students[i].cheater=True
-
 v.dontClose()
