@@ -54,6 +54,14 @@ class Student:
     
     def getFriends(self):
         return self.friends
+    
+    def setCheater(self, isCheater):
+        self.cheater = isCheater
+        
+    def updateProgress(self, addedProgress):
+        self.progress += addedProgress
+        if self.progress > 1:
+            self.progress = 1
 
     def useDay(self, today, report=False):
         if today >= self.dueDate:
@@ -68,33 +76,29 @@ class Student:
             self.finished = True
         
         # cheat if need be
-        # self.potentiallyCheat(today, report)
+        self.potentiallyCheat(today, report)
 
     def potentiallyCheat(self, today, report=False):
         if self.progress < 1 and self.cheat_level <= 3 and today >= self.startDay:
-            self.potentiallyRequest(report)
-        if self.cheat_level <= 3 and today >= self.startDay:
-            self.potentiallySend(report)
-            
-    def potentiallySend(self, report=False):
-        for friend in self.friends:
-            # friend.potentiallyReceive(report) # TODO add this method in once friends are implemented
+            self.request(today, report)
+        
+    def potentiallySend(self, today, requester, report=False):
+        if self.cheat_level <= 3 and self.startDay >= today and self.progress > requester.getProgress():
             if report:
-                print('Student ' + str(self.id) + ' sent their homework to ' + str(friend.getId()))
+                print('Student ' + str(self.id) + ' sent their homework to ' + str(requester.getId()))
+            return True
+        else:
+            return False
     
-    def potentiallyRequest(self, report=False):
-        if self.cheat_level <= 3: # TODO introduce the idea that students may not finish in time and that's why they would "request help" (cheat)
-            for friend in self.friends:
-                # friend.potentiallySend() # TODO determine if they only ask from certain friends
-                if report:
-                    print('Student ' + str(self.id) + ' requested homework from ' + str(friend.getId()))
-            
-    def potentiallyReceive(self, friendId, report=False):
-        if self.cheat_level <= 3 and self.progress < 1: # TODO determine metrics for why a student would accept homework
-            # TODO algorithm for if they receive how much does their progress increase
-            # TODO do they receive based on any of their friend's metrics?
+    def request(self, today, report=False):
+        for friend in self.friends:
             if report:
-                print('Student ' + str(self.id) + ' received homework from ' + str(friendId))
+                print('Student ' + str(self.id) + ' requested homework from ' + str(friend.getId()))
+            if friend.potentiallySend(today, self, report):
+                self.cheater = True
+                self.updateProgress(friend.getWorkPerDay())
+                # friend.setCheater(True) # TODO is the friend also a cheater?
+                # friend.updateProgress(self.workPerDay)
 
     def makeFriends(self, students):
         print(f'ID is {self.id}, preferredNumFriends is {self.preferredNumFriends}')
