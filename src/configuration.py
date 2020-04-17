@@ -1,20 +1,21 @@
 from sys import exit
 
 # classroom configuration
-NUM_DAYS = 10
-NUM_STUDENTS = 5
+NUM_DAYS = 20
+NUM_STUDENTS = 30
 
 # student configuration
 PROCRASTINATION_RANGE = (0, 10)
 CHEAT_RANGE = (0, 10)
-NUM_PERSONALITIES = 2
+NUM_PERSONALITIES = 16
+MORAL_CHEAT_MIN = 3
 
 # friend generation configuration
 CHEAT_TOLERANCE = 3
 PROCRASTINATE_TOLERANCE = 7
 MIN_CANDIDATES = 4
-MIN_FRIENDS = 0
-MAX_FRIENDS = 4
+MIN_FRIENDS = 5
+MAX_FRIENDS = 8
 MAX_ITERATIONS = 10000000000
 
 # validate configurations

@@ -59,9 +59,11 @@ class Student:
         self.cheater = isCheater
         
     def updateProgress(self, addedProgress):
-        self.progress += addedProgress
+        if self.progress < 1:
+            self.progress += addedProgress
         if self.progress > 1:
             self.progress = 1
+            self.finished = True
 
     def useDay(self, today, report=False):
         if today >= self.dueDate:
@@ -77,13 +79,16 @@ class Student:
         
         # cheat if need be
         self.potentiallyCheat(today, report)
-
+        
+    # Willing to cheat if closer to the deadline and add peer pressure meaning the more friends you have
+    # that are willing to cheat; meaning the more friends you have that have cheated will change you
+    # more willing to send than request
     def potentiallyCheat(self, today, report=False):
-        if self.progress < 1 and self.cheat_level <= 3 and today >= self.startDay:
+        if self.progress < 1 and self.cheat_level <= MORAL_CHEAT_MIN and today >= self.startDay and not self.cheater:
             self.request(today, report)
         
     def potentiallySend(self, today, requester, report=False):
-        if self.cheat_level <= 3 and self.startDay >= today and self.progress > requester.getProgress():
+        if self.cheat_level <= MORAL_CHEAT_MIN and self.startDay >= today and self.progress > requester.getProgress():
             if report:
                 print('Student ' + str(self.id) + ' sent their homework to ' + str(requester.getId()))
             return True
@@ -96,8 +101,8 @@ class Student:
                 print('Student ' + str(self.id) + ' requested homework from ' + str(friend.getId()))
             if friend.potentiallySend(today, self, report):
                 self.cheater = True
-                self.updateProgress(friend.getWorkPerDay())
-                # friend.setCheater(True) # TODO is the friend also a cheater?
+                friend.setCheater(True) # TODO is the friend also a cheater?
+                # self.updateProgress(friend.getWorkPerDay())
                 # friend.updateProgress(self.workPerDay)
 
     def makeFriends(self, students):
