@@ -10,6 +10,8 @@ class Student:
         self.id = id
         self.cheat_level = cheat_level
         self.procrastinate_level = procrastinate_level
+        self.peer_pressure_level = 0
+        self.desperation_level = 0
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
         self.progress = 0  # a number between 0 and 1 that shows the fraction of the total work already completed
         self.finished = False
@@ -33,6 +35,9 @@ class Student:
         
     def getId(self):
         return self.id
+    
+    def getIsCheater(self):
+        return self.cheater
     
     def getCheatLevel(self):
         return self.cheat_level
@@ -64,6 +69,20 @@ class Student:
         if self.progress > 1:
             self.progress = 1
             self.finished = True
+            
+    def setDesperationLevel(self):
+        pass
+            
+    def getDesperationLevel(self):
+        return self.desperation_level
+    
+    def getPeerPressureLevel(self):
+        return self.peer_pressure_level
+    
+    def setPeerPressureLevel(self):
+        for friend in self.friends:
+            if friend.getIsCheater():
+                self.peer_pressure_level += 1
 
     def useDay(self, today, report=False):
         if today >= self.dueDate:
@@ -78,17 +97,21 @@ class Student:
             self.finished = True
         
         # cheat if need be
+        self.setPeerPressureLevel()
+        self.setDesperationLevel()
         self.potentiallyCheat(today, report)
         
-    # Willing to cheat if closer to the deadline and add peer pressure meaning the more friends you have
-    # that are willing to cheat; meaning the more friends you have that have cheated will change you
-    # more willing to send than request
+    # Willing to cheat if closer to the deadline a
+    # last 25%? maybe make people become desparate
+    # desparation level is a function of how much time you have left and your work per day
     def potentiallyCheat(self, today, report=False):
-        if self.progress < 1 and self.cheat_level <= MORAL_CHEAT_MIN and today >= self.startDay and not self.cheater:
+        if not self.finished and not self.cheater and today >= self.startDay and self.cheat_level <= MORAL_CHEAT_MIN_REQUEST: # and self.getPeerPressureLevel() and self.getDesperationLevel():
+                                                                            # Alex I intentionally didn't include these but left them as comments so you can see what they are
+                                                                            # I have implemented them above for your use
             self.request(today, report)
         
     def potentiallySend(self, today, requester, report=False):
-        if self.cheat_level <= MORAL_CHEAT_MIN and self.startDay >= today and self.progress > requester.getProgress():
+        if self.cheat_level <= MORAL_CHEAT_MIN_SEND and self.startDay >= today and self.progress > requester.getProgress():
             if report:
                 print('Student ' + str(self.id) + ' sent their homework to ' + str(requester.getId()))
             return True
