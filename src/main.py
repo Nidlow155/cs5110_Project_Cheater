@@ -4,8 +4,8 @@ from configuration import *
 from visual import Visual
 import time
 
-
-myClass = Class(NUM_STUDENTS, NUM_DAYS)
+verbose = False
+myClass = Class(NUM_STUDENTS, NUM_DAYS, verbose)
 
 # # run the simulation
 # v = Visual(myClass.students)

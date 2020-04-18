@@ -5,11 +5,19 @@ from seaborn import barplot
 
 
 class Class:
-    def __init__(self, student_count, dueDate):
+    def __init__(self, student_count, dueDate, verbose):
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
         self.today = 0
         self.students = []
-        
+
+        # build the distributions of procrastination and cheat levels
+        procrastinate_levels = []
+        for i in range(len(CHEAT_DISTR)):
+            amountAtLevel_i = int(CHEAT_DISTR[i] * NUM_STUDENTS)
+            for j in range(amountAtLevel_i):
+                procrastinate_levels.append(i)
+
+        print(f"len(procrastiante_levels) = {len(procrastinate_levels)}, NUM_STUDENTS = {NUM_STUDENTS}")
 
 
         # add the students
@@ -22,10 +30,11 @@ class Class:
         needsFriends = [True] * NUM_STUDENTS
         counter = 0
         while (True in needsFriends):
-            print(f'\n========\nROUND {counter}\n========\n')
+            if verbose:
+                print(f'\n========\nROUND {counter}\n========\n')
             for i in range(len(self.students)):
                 if self.students[i].needsFriends():
-                    self.students[i].makeFriends(self.students)
+                    self.students[i].makeFriends(self.students, verbose)
                 needsFriends[i] = self.students[i].needsFriends()
             counter += 1
             if counter == MAX_ITERATIONS:
@@ -33,8 +42,9 @@ class Class:
         if counter == MAX_ITERATIONS:
             print("Maxed Out")
         else:
-            for student in self.students:
-                student.printFriendList()
+            if verbose:
+                for student in self.students:
+                    student.printFriendList()
 
     def useDay(self, report=False):
         if report:
