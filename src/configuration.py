@@ -1,6 +1,7 @@
 from sys import exit
 
 def getSumOfList(p_list):
+    # the sum(list) native function didn't do what I wanted it to, so I made this function, then it failed me too
     sum = 0
     for i in p_list:
         sum += i
@@ -9,12 +10,12 @@ def getSumOfList(p_list):
     return sum
 
 # demographic configuration
-CHEAT_DISTR = [.7, .1, 0, .1, .1]
-PROCRASTINATE_DISTR = [0, 0, .4, .5, .1]
+CHEAT_DISTR = [0, .7, .1, 0, .1, .1]
+PROCRASTINATE_DISTR = [0, 0, .4, .2, .1, .2, .1]
 
 # classroom configuration
 NUM_DAYS = 10
-NUM_STUDENTS = 20
+NUM_STUDENTS = 25
 DAY_DELAY = .75  # seconds
 
 # student configuration

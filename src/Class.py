@@ -7,7 +7,7 @@ class Class:
     def __init__(self, student_count, dueDate):
         # verbosity for each type of initialization, set to false for deployment (didn't parameterize so it wouldn't be ugly)
         verbose_setFriends = False
-        verbose_buildDistributions = True
+        verbose_buildDistributions = False
 
         # attributes on a class
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
@@ -15,10 +15,13 @@ class Class:
         self.students = []
 
         # build and visualize the distributions of procrastination and cheat levels
-        procrastinate = "procrastinate"
-        cheat = "cheat"
-        procrastinationLevels = self.buildDistribution(PROCRASTINATE_DISTR, verbose_buildDistributions, procrastinate)
-        cheatLevels = self.buildDistribution(CHEAT_DISTR, verbose_buildDistributions, cheat)
+        f, axs = plt.subplots(1, 2)
+        procrastinate = "Procrastination"
+        cheat = "Cheat"
+        procrastinationLevels = self.buildDistribution(PROCRASTINATE_DISTR, verbose_buildDistributions, procrastinate, axs[0])
+        cheatLevels = self.buildDistribution(CHEAT_DISTR, verbose_buildDistributions, cheat, axs[1])
+        plt.ion()
+        plt.show()
 
         # add the students
         for i in range(student_count):
@@ -44,7 +47,7 @@ class Class:
                 for student in self.students:
                     student.printFriendList()
 
-    def buildDistribution(self, distribution, verbose, name):
+    def buildDistribution(self, distribution, verbose, name, chart):
         # perform calculations
         counts = []
         values = []
@@ -65,11 +68,10 @@ class Class:
         # visualize
         labels = [str(i) for i in range(len(distribution))]
         y_pos = range(len(distribution))
-        plt.bar(y_pos, counts, align='center', alpha=.5)
-        plt.xticks(y_pos, labels)
-        plt.ylabel(name)
-        plt.title("Distribution of " + name)
-        plt.show()
+        chart.bar(y_pos, counts, align='center', alpha=.5)
+        # chart.xticks(y_pos, labels)
+        # chart.ylabel.set_text(name)
+        chart.title.set_text("Distribution of " + name)
 
         # return
         shuffle(values)
