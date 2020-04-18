@@ -1,24 +1,23 @@
 from Student import Student
 from configuration import *
-from random import randint
+from random import randint, shuffle
 from seaborn import barplot
 
 
 class Class:
-    def __init__(self, student_count, dueDate, verbose):
+    def __init__(self, student_count, dueDate):
+        # verbosity for each type of initialization, set to false for deployment (didn't parameterize so it wouldn't be ugly)
+        verbose_setFriends = False
+        verbose_buildDistributions = True
+
+        # attributes on a class
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
         self.today = 0
         self.students = []
 
         # build the distributions of procrastination and cheat levels
-        procrastinate_levels = []
-        for i in range(len(CHEAT_DISTR)):
-            amountAtLevel_i = int(CHEAT_DISTR[i] * NUM_STUDENTS)
-            for j in range(amountAtLevel_i):
-                procrastinate_levels.append(i)
-
-        print(f"len(procrastiante_levels) = {len(procrastinate_levels)}, NUM_STUDENTS = {NUM_STUDENTS}")
-
+        procrastinationLevels = self.buildDistribution(PROCRASTINATE_DISTR, verbose_buildDistributions, 'procrastination')
+        cheatLevels = self.buildDistribution(CHEAT_DISTR, verbose_buildDistributions, "cheat")
 
         # add the students
         for i in range(student_count):
@@ -30,11 +29,11 @@ class Class:
         needsFriends = [True] * NUM_STUDENTS
         counter = 0
         while (True in needsFriends):
-            if verbose:
+            if verbose_setFriends:
                 print(f'\n========\nROUND {counter}\n========\n')
             for i in range(len(self.students)):
                 if self.students[i].needsFriends():
-                    self.students[i].makeFriends(self.students, verbose)
+                    self.students[i].makeFriends(self.students, verbose_setFriends)
                 needsFriends[i] = self.students[i].needsFriends()
             counter += 1
             if counter == MAX_ITERATIONS:
@@ -42,9 +41,26 @@ class Class:
         if counter == MAX_ITERATIONS:
             print("Maxed Out")
         else:
-            if verbose:
+            if verbose_setFriends:
                 for student in self.students:
                     student.printFriendList()
+
+    def buildDistribution(self, distribution, verbose, name):
+        values = []
+        for level in range(len(distribution)):
+            quantityAtGivenLevel = int(distribution[level] * NUM_STUDENTS)
+            for i in range(quantityAtGivenLevel):
+                values.append(level)
+        if len(values) != NUM_STUDENTS:
+            for i in range(NUM_STUDENTS - len(values)):
+                values.append(randint(0, len(distribution) - 1))
+        if verbose:
+            print(f"For {name}, values are (before shuffling):")
+            for i in values:
+                print(str(i) + ", ", end='')
+            print()
+        shuffle(values)
+        return values
 
     def useDay(self, report=False):
         if report:
