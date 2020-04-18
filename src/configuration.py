@@ -2,7 +2,8 @@ from sys import exit
 
 # classroom configuration
 NUM_DAYS = 10
-NUM_STUDENTS = 5
+NUM_STUDENTS = 20
+DAY_DELAY = .75  # senconds
 
 # student configuration
 PROCRASTINATION_RANGE = (0, 10)
