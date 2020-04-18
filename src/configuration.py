@@ -9,8 +9,8 @@ def getSumOfList(p_list):
     return sum
 
 # demographic configuration
-CHEAT_DISTR = [.1, .1, .1, .1, .1, .1, .1, .1, .1, .1]
-PROCRASTINATE_DISTR = [.9, 0, 0, 0, 0, 0, 0, 0, .1]
+CHEAT_DISTR = [.7, .1, 0, .1, .1]
+PROCRASTINATE_DISTR = [0, 0, .4, .5, .1]
 
 # classroom configuration
 NUM_DAYS = 10

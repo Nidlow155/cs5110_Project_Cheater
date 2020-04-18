@@ -6,7 +6,9 @@ import time
 
 myClass = Class(NUM_STUDENTS, NUM_DAYS)
 
-# # run the simulation
+while True:
+    pass
+# run the simulation
 # v = Visual(myClass.students)
 # v.showClass()
 # for i in range(NUM_DAYS):

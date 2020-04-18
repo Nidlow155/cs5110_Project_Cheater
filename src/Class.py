@@ -1,8 +1,7 @@
 from Student import Student
 from configuration import *
 from random import randint, shuffle
-from seaborn import barplot
-
+import matplotlib.pyplot as plt
 
 class Class:
     def __init__(self, student_count, dueDate):
@@ -15,15 +14,15 @@ class Class:
         self.today = 0
         self.students = []
 
-        # build the distributions of procrastination and cheat levels
-        procrastinationLevels = self.buildDistribution(PROCRASTINATE_DISTR, verbose_buildDistributions, 'procrastination')
-        cheatLevels = self.buildDistribution(CHEAT_DISTR, verbose_buildDistributions, "cheat")
+        # build and visualize the distributions of procrastination and cheat levels
+        procrastinate = "procrastinate"
+        cheat = "cheat"
+        procrastinationLevels = self.buildDistribution(PROCRASTINATE_DISTR, verbose_buildDistributions, procrastinate)
+        cheatLevels = self.buildDistribution(CHEAT_DISTR, verbose_buildDistributions, cheat)
 
         # add the students
         for i in range(student_count):
-            cheat = 2
-            procrastinate = 4
-            self.students.append(Student(i, cheat, procrastinate, dueDate))
+            self.students.append(Student(i, cheatLevels[i], procrastinationLevels[i], dueDate))
 
         # set the friends
         needsFriends = [True] * NUM_STUDENTS
@@ -46,11 +45,14 @@ class Class:
                     student.printFriendList()
 
     def buildDistribution(self, distribution, verbose, name):
+        # perform calculations
+        counts = []
         values = []
         for level in range(len(distribution)):
             quantityAtGivenLevel = int(distribution[level] * NUM_STUDENTS)
             for i in range(quantityAtGivenLevel):
                 values.append(level)
+            counts.append(quantityAtGivenLevel)
         if len(values) != NUM_STUDENTS:
             for i in range(NUM_STUDENTS - len(values)):
                 values.append(randint(0, len(distribution) - 1))
@@ -59,6 +61,17 @@ class Class:
             for i in values:
                 print(str(i) + ", ", end='')
             print()
+
+        # visualize
+        labels = [str(i) for i in range(len(distribution))]
+        y_pos = range(len(distribution))
+        plt.bar(y_pos, counts, align='center', alpha=.5)
+        plt.xticks(y_pos, labels)
+        plt.ylabel(name)
+        plt.title("Distribution of " + name)
+        plt.show()
+
+        # return
         shuffle(values)
         return values
 
