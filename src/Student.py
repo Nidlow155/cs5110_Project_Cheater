@@ -4,9 +4,6 @@ from configuration import *
 
 class Student:
     def __init__(self, id, cheat_level, procrastinate_level, dueDate):
-        assert PROCRASTINATION_RANGE[0] <= procrastinate_level <= PROCRASTINATION_RANGE[1]
-        assert CHEAT_RANGE[0] <= cheat_level <= CHEAT_RANGE[1]
-
         self.id = id
         self.cheat_level = cheat_level
         self.procrastinate_level = procrastinate_level

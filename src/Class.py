@@ -1,17 +1,21 @@
 from Student import Student
 from configuration import *
 from random import randint
+from seaborn import barplot
+
 
 class Class:
     def __init__(self, student_count, dueDate):
         self.dueDate = dueDate  # considered to be due at 12:01 AM on the dueDate. For example, if it is due on day 10, they have days 0-9 to work on the assignment
         self.today = 0
         self.students = []
+        
+
 
         # add the students
         for i in range(student_count):
-            cheat = randint(*CHEAT_RANGE)
-            procrastinate = randint(*PROCRASTINATION_RANGE)
+            cheat = 2
+            procrastinate = 4
             self.students.append(Student(i, cheat, procrastinate, dueDate))
 
         # set the friends
