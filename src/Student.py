@@ -64,14 +64,15 @@ class Student:
         self.cheater = isCheater
         
     def updateProgress(self, addedProgress):
-        if self.progress < 1:
+        if not self.finished:
             self.progress += addedProgress
-        if self.progress > 1:
+        else:
             self.progress = 1
             self.finished = True
             
-    def setDesperationLevel(self):
-        pass
+    def setDesperationLevel(self, today):
+        if self.startDay >= today and not self.finished:
+            self.desperation_level = int(((1 - self.progress) / (self.dueDate - today + self.procrastinate_level)) * 100)
             
     def getDesperationLevel(self):
         return self.desperation_level
@@ -98,12 +99,9 @@ class Student:
         
         # cheat if need be
         self.setPeerPressureLevel()
-        self.setDesperationLevel()
+        self.setDesperationLevel(today)
         self.potentiallyCheat(today, report)
         
-    # Willing to cheat if closer to the deadline a
-    # last 25%? maybe make people become desparate
-    # desparation level is a function of how much time you have left and your work per day
     def potentiallyCheat(self, today, report=False):
         if not self.finished and not self.cheater and today >= self.startDay and self.cheat_level <= MORAL_CHEAT_MIN_REQUEST: # and self.getPeerPressureLevel() and self.getDesperationLevel():
                                                                             # Alex I intentionally didn't include these but left them as comments so you can see what they are
