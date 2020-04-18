@@ -13,8 +13,13 @@ class Visual:
     def __init__(self, students=None):
         self.t = turtle.Turtle()
         self.t.speed(0)
+        self.t2 = turtle.Turtle()
+        self.t2.speed(0)
+        self.t2.hideturtle()
         self.students = students
         self.sCoords = []
+        self.updatedCheaters = []
+        self.updatedFinished = []
         if students:
             self.setClass(students)
 
@@ -24,11 +29,13 @@ class Visual:
         # self.t.clear()
         self._drawAllStudents()
         self._drawAllFriendships()
+        self._drawDayCount()
         # turtle.done()
 
-    def updateClass(self, students):
+    def updateClass(self, students, day):
         self.setClass(students)
-        self._drawAllStudents()
+        self._drawAllStudents(updatesOnly=True)
+        self._drawDayCount(day)
 
     def setClass(self, students):
         self.students = students
@@ -46,6 +53,7 @@ class Visual:
         self.sCoords = []
         n = len(self.students)
         r = n * 10
+        self.radius = r
         for j in range(n):
             theta = j*(2*math.pi / n)
             c = Coords(r*math.cos(theta), r*math.sin(theta))
@@ -71,10 +79,27 @@ class Visual:
         c = self.sCoords[i]
         self.t.goto(c.x, c.y)
         self.t.down()
-        color = "Red" if self.students[i].cheater else "Black"
+        color = "Green" if self.students[i].finished else "Black"
         self.t.dot(diameter, color)
+        if self.students[i].cheater:
+            self.t.dot(diameter/2, "Red")
 
-    def _drawAllStudents(self):
+    def _drawAllStudents(self, updatesOnly=False):
         for i in range(len(self.students)):
-            self._drawStudent(i)
+            if updatesOnly:
+                if self.students[i].cheater and i not in self.updatedCheaters:
+                    self.updatedCheaters.append(i)
+                    self._drawStudent(i)
+                if self.students[i].finished and i not in self.updatedFinished:
+                    self.updatedFinished.append(i)
+                    self._drawStudent(i)
+            else:
+                self._drawStudent(i)
 
+    def _drawDayCount(self, day=""):
+        self.t2.up()
+        self.t2.goto(0,self.radius+40)
+        style = ('Courier', 30)
+        self.t2.clear()
+        self.t2.write('Day: ', True, font=style, align='center')
+        self.t2.write(day, font=style, align='center')
