@@ -4,9 +4,6 @@ from configuration import *
 
 class Student:
     def __init__(self, id, cheat_level, procrastinate_level, dueDate):
-        assert PROCRASTINATION_RANGE[0] <= procrastinate_level <= PROCRASTINATION_RANGE[1]
-        assert CHEAT_RANGE[0] <= cheat_level <= CHEAT_RANGE[1]
-
         self.id = id
         self.cheat_level = cheat_level
         self.procrastinate_level = procrastinate_level
@@ -126,8 +123,9 @@ class Student:
                 # self.updateProgress(friend.getWorkPerDay())
                 # friend.updateProgress(self.workPerDay)
 
-    def makeFriends(self, students):
-        print(f'ID is {self.id}, preferredNumFriends is {self.preferredNumFriends}')
+    def makeFriends(self, students, verbose):
+        if verbose:
+            print(f'ID is {self.id}, preferredNumFriends is {self.preferredNumFriends}')
         # validation
         if len(self.friends) >= self.preferredNumFriends:
             raise Exception("Shouldn't be calling Student::makeFriends() when the student already has all their friends")
@@ -142,25 +140,29 @@ class Student:
         # get preferred candidates
         likelyCandidates = self.getFriendsOfFriends()
         if len(likelyCandidates) < MIN_CANDIDATES:
-            print(f'(supplementing existing {len(likelyCandidates)} candidates with new candidates with ids ', end='')
+            if verbose:
+                print(f'(supplementing existing {len(likelyCandidates)} candidates with new candidates with ids ', end='')
             for candidate in allCandidates:
                 if candidate not in likelyCandidates:
                     likelyCandidates.append(candidate)
-            print(')')
+            if verbose:
+                print(')')
 
         # select a candidate
-        print(f'Candidate ids are: ', end='')
-        for candidate in likelyCandidates:
-            print(candidate.id, ', ', end='')
-        print()
-        print(f'Friends before are: ', end='')
-        for friend in self.friends:
-            print(friend.getId(), ", ", end='')
+        if verbose:
+            print(f'Candidate ids are: ', end='')
+            for candidate in likelyCandidates:
+                print(candidate.id, ', ', end='')
+            print()
+            print(f'Friends before are: ', end='')
+            for friend in self.friends:
+                print(friend.getId(), ", ", end='')
         newFriend = self.selectCandidate(likelyCandidates)
         self.friends.append(newFriend)
         newFriend.addFriend(students[self.id])
-        print(f'\nAdded friend {likelyCandidates[0].id}')
-        print('*****')
+        if verbose:
+            print(f'\nAdded friend {likelyCandidates[0].id}')
+            print('*****')
 
 
     def selectCandidate(self, candidates):

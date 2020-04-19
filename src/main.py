@@ -4,7 +4,6 @@ from configuration import *
 from visual import Visual
 import time
 
-
 myClass = Class(NUM_STUDENTS, NUM_DAYS)
 
 # run the simulation
