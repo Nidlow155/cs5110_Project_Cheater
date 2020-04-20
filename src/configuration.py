@@ -10,8 +10,9 @@ def getSumOfList(p_list):
     return sum
 
 # demographic configuration
-CHEAT_DISTR = [0, .7, .1, 0, .1, .1]
-PROCRASTINATE_DISTR = [0, 0, .4, .2, .1, .2, .1]
+CHEAT_DISTR = [.1, .1, .1, .1, .1, .1, .1, .1, .1, .1]
+MAX_CHEAT_LEVEL = len(CHEAT_DISTR) - 1
+PROCRASTINATE_DISTR = [.1, .1, .1, .1, .1, .1, .1, .1, .1, .1]
 
 # classroom configuration
 NUM_DAYS = 10
@@ -20,15 +21,19 @@ DAY_DELAY = .75  # seconds
 
 # student configuration
 NUM_PERSONALITIES = 5
-MORAL_CHEAT_MIN_REQUEST = 3
-MORAL_CHEAT_MIN_SEND = 2
+MORAL_CHEAT_MIN_REQUEST = .6 * MAX_CHEAT_LEVEL
+MORAL_CHEAT_MIN_SEND =  .4 * MAX_CHEAT_LEVEL
+
+MAX_DESPERATION_LEVEL = .2 * MAX_CHEAT_LEVEL  # percentage of how much the desperation level can affect the cheat level
+MAX_PEER_PRESSURE_LEVEL = .2 * MAX_CHEAT_LEVEL  # how much can peer pressure affect my cheat level
+
 
 # friend generation configuration
-CHEAT_TOLERANCE = 2
-PROCRASTINATE_TOLERANCE = 1
+CHEAT_TOLERANCE = 3
+PROCRASTINATE_TOLERANCE = 3
 MIN_CANDIDATES = 4
-MIN_FRIENDS = 1
-MAX_FRIENDS = 3
+MIN_FRIENDS = 2
+MAX_FRIENDS = 6
 MAX_ITERATIONS = 1000
 
 # validate configurations

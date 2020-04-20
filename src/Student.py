@@ -67,20 +67,18 @@ class Student:
             self.progress = 1
             self.finished = True
             
-    def setDesperationLevel(self, today):
-        if self.startDay >= today and not self.finished:
-            self.desperation_level = int(((1 - self.progress) / (self.dueDate - today + self.procrastinate_level)) * 100)
-            
-    def getDesperationLevel(self):
-        return self.desperation_level
+    def getDesperationLevel(self, today):
+        return ((1 - self.progress) / (self.dueDate - today)) * MAX_DESPERATION_LEVEL  # a proportion of the max desperation level based off of progress and due date
+
     
     def getPeerPressureLevel(self):
-        return self.peer_pressure_level
-    
-    def setPeerPressureLevel(self):
+        cheat_count = 0
         for friend in self.friends:
             if friend.getIsCheater():
-                self.peer_pressure_level += 1
+                cheat_count += 1
+        cheat_proportion = cheat_count / len(self.friends)
+        return cheat_proportion * MAX_PEER_PRESSURE_LEVEL
+    
 
     def useDay(self, today, report=False):
         if today >= self.dueDate:
@@ -95,18 +93,21 @@ class Student:
             self.finished = True
         
         # cheat if need be
-        self.setPeerPressureLevel()
-        self.setDesperationLevel(today)
+        # self.setPeerPressureLevel()
+        # self.setDesperationLevel(today)
         self.potentiallyCheat(today, report)
         
     def potentiallyCheat(self, today, report=False):
-        if not self.finished and not self.cheater and today >= self.startDay and self.cheat_level <= MORAL_CHEAT_MIN_REQUEST: # and self.getPeerPressureLevel() and self.getDesperationLevel():
-                                                                            # Alex I intentionally didn't include these but left them as comments so you can see what they are
-                                                                            # I have implemented them above for your use
-            self.request(today, report)
+        if not self.finished and not self.cheater and today >= self.startDay \
+            and self.cheat_level + self.getDesperationLevel(today) + self.getPeerPressureLevel() >= MORAL_CHEAT_MIN_REQUEST:
+                # print("cheat: ", self.cheat_level)
+                # print("desp: ", self.getDesperationLevel(today))
+                # print("cheat: ", self.getPeerPressureLevel())
+                print()
+                self.request(today, report)
         
     def potentiallySend(self, today, requester, report=False):
-        if self.cheat_level <= MORAL_CHEAT_MIN_SEND and self.startDay >= today and self.progress > requester.getProgress():
+        if self.cheat_level >= MORAL_CHEAT_MIN_SEND and self.startDay >= today and self.progress > requester.getProgress():
             if report:
                 print('Student ' + str(self.id) + ' sent their homework to ' + str(requester.getId()))
             return True
