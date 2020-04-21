@@ -14,15 +14,17 @@ The original intent of the code was also to create an algorithm for determining 
 
 ## How to Run the Code
 
-We have created a virtual environment to run the code so the following commands may be run in the command line.
+We are using a pipenv as the package manager for our python project.
 
-If a virtual envionrment has not been set up run this command:
+python version: 3.7
+
+If you don't have pipenv run this command:
 
     pip install pipenv
 
-Install any necessary dependencies from the pip file.
+Create a virtual enviornment and install all necessary dependencies from the pip file.
 
-    pipenv install <package name>
+    pipenv install
 
 Afterwards the code can be run in a few ways from the root directory:
 
@@ -32,9 +34,6 @@ Afterwards the code can be run in a few ways from the root directory:
 Or:
 
     pipenv run python src/main.py
-
-The code may also be run from the IDE if the virtual environment has been created by selecting the run code icon from main.py.
-
 ---
 
 ### Git Commands
